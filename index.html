@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Mosaic profile photo generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    :root {
+      --mosaic-blue: #2075bc;
+      --mosaic-red: #ec2227;
+      --mosaic-green: #8ec640;
+      --mosaic-orange: #f8951d;
+      --mosaic-purple: #5a5daa;
+      --mosaic-slate-blue: #7086ad;
+      --mosaic-deep-blue: #3b4672;
+      --mosaic-scarlet: #ac1f25;
+      --mosaic-deep-red: #791222;
+      --mosaic-deep-orange: #a45e18;
+      --mosaic-mint-green: #7aa496;
+      --mosaic-grey: #717174;
+      --mosaic-greige: #f9f8f6;
+      --mosaic-card: #ffffff;
+      --mosaic-hairline: #e8e6e2;
+      --mosaic-ink: #1f1f1f;
+      --mosaic-ink-soft: #5a5a5e;
+      --mosaic-ink-quiet: #8e8e92;
+      --mosaic-blue-08: #e8eef1;
+      --mosaic-blue-15: #d8e4ed;
+      --mosaic-blue-25: #c3d7e8;
+      --mosaic-orange-15: #f9e9d5;
+      --mosaic-green-15: #e9f0db;
+      --mosaic-purple-15: #e1e1eb;
+      --shadow-floating: 0 8px 32px rgb(0 0 0 / 0.08), 0 2px 8px rgb(0 0 0 / 0.04);
+      --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+      --serif: "Fraunces", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, rgb(232 238 241 / 0.42) 1px, transparent 1px),
+        linear-gradient(rgb(232 238 241 / 0.42) 1px, transparent 1px),
+        var(--mosaic-greige);
+      background-size: 56px 56px;
+      color: var(--mosaic-ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .app {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 72px;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--mosaic-hairline);
+      background: rgb(249 248 246 / 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      color: var(--mosaic-blue);
+    }
+
+    .mark span {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: currentColor;
+    }
+
+    .mark span:nth-child(1) { left: 2px; top: 2px; background: var(--mosaic-blue); }
+    .mark span:nth-child(2) { right: 2px; top: 2px; background: var(--mosaic-orange); }
+    .mark span:nth-child(3) { left: 2px; bottom: 2px; background: var(--mosaic-green); }
+    .mark span:nth-child(4) { right: 2px; bottom: 2px; background: var(--mosaic-purple); }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 7px 14px;
+      border: 1px solid var(--mosaic-hairline);
+      border-radius: 8px;
+      background: var(--mosaic-card);
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--mosaic-blue-08);
+      border-color: var(--mosaic-blue-25);
+      color: var(--mosaic-blue);
+    }
+
+    .btn.primary {
+      background: var(--mosaic-blue);
+      border-color: var(--mosaic-blue);
+      color: #fff;
+    }
+
+    .btn.primary:hover:not(:disabled) {
+      background: #1b68a9;
+      border-color: #1b68a9;
+      color: #fff;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px;
+      border-right: 1px solid var(--mosaic-hairline);
+      background: rgb(255 255 255 / 0.68);
+    }
+
+    .upload {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 228px;
+      padding: 28px;
+      border: 1px dashed var(--mosaic-blue-25);
+      border-radius: 12px;
+      background: var(--mosaic-blue-08);
+      color: var(--mosaic-deep-blue);
+      text-align: center;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+
+    .upload.is-dragover {
+      background: var(--mosaic-blue-15);
+      border-color: var(--mosaic-blue);
+    }
+
+    .upload input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload i {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      background: var(--mosaic-card);
+      color: var(--mosaic-blue);
+      font-size: 22px;
+    }
+
+    .upload strong {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .upload span {
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+    }
+
+    .group {
+      display: grid;
+      gap: 12px;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--mosaic-ink-soft);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .control {
+      display: grid;
+      gap: 8px;
+    }
+
+    .control label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .control output {
+      color: var(--mosaic-ink-quiet);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--mosaic-blue);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 3px;
+      border: 1px solid var(--mosaic-hairline);
+      border-radius: 8px;
+      background: var(--mosaic-card);
+    }
+
+    .segmented button {
+      min-height: 30px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--mosaic-ink-soft);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: var(--mosaic-blue-15);
+      color: var(--mosaic-deep-blue);
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .swatch {
+      height: 32px;
+      border: 1px solid rgb(31 31 31 / 0.08);
+      border-radius: 8px;
+    }
+
+    .hint {
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--mosaic-orange-15);
+      color: var(--mosaic-deep-orange);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 28px;
+    }
+
+    .preview-wrap {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .preview-shell {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(72vh, 76vw, 720px);
+      max-width: 100%;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, var(--mosaic-card), var(--mosaic-blue-08)),
+        var(--mosaic-card);
+      border: 1px solid var(--mosaic-hairline);
+      box-shadow: var(--shadow-floating);
+      overflow: hidden;
+    }
+
+    .preview-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgb(31 31 31 / 0.035) 1px, transparent 1px),
+        linear-gradient(rgb(31 31 31 / 0.035) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    canvas {
+      position: relative;
+      width: min(78%, 560px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--mosaic-card);
+      box-shadow: 0 0 0 1px var(--mosaic-hairline), 0 0 0 14px var(--mosaic-card);
+    }
+
+    .empty {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 36px;
+      color: var(--mosaic-ink-soft);
+      text-align: center;
+    }
+
+    .empty[hidden] {
+      display: none;
+    }
+
+    .empty-card {
+      max-width: 330px;
+      padding: 22px;
+      border: 1px solid var(--mosaic-hairline);
+      border-radius: 12px;
+      background: rgb(255 255 255 / 0.88);
+    }
+
+    .empty-card i {
+      color: var(--mosaic-blue);
+      font-size: 30px;
+    }
+
+    .empty-card h2 {
+      margin: 10px 0 6px;
+      font-family: var(--serif);
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .empty-card p {
+      margin: 0;
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 48px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--mosaic-hairline);
+      color: var(--mosaic-ink-soft);
+      font-size: 13px;
+    }
+
+    .status strong {
+      color: var(--mosaic-ink);
+      font-weight: 500;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 10;
+      transform: translateX(-50%) translateY(16px);
+      padding: 10px 14px;
+      border: 1px solid var(--mosaic-hairline);
+      border-radius: 8px;
+      background: var(--mosaic-card);
+      box-shadow: var(--shadow-floating);
+      color: var(--mosaic-ink-soft);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        border-right: 0;
+        border-bottom: 1px solid var(--mosaic-hairline);
+      }
+
+      .stage {
+        padding: 20px;
+      }
+
+      .preview-shell {
+        width: min(92vw, 560px);
+      }
+    }
+
+    @media (max-width: 520px) {
+      header, .panel, .stage {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .toolbar, .btn {
+        width: 100%;
+      }
+
+      .btn {
+        justify-content: center;
+      }
+
+      canvas {
+        width: 76%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div>
+          <h1>Mosaic profile photo generator</h1>
+          <p>Turn a profile image into a composed brand mosaic.</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn" id="copyBtn" type="button" disabled><i class="ph ph-copy"></i>Copy PNG</button>
+        <button class="btn primary" id="downloadBtn" type="button" disabled><i class="ph ph-download-simple"></i>Download</button>
+      </div>
+    </header>
+
+    <main>
+      <aside class="panel">
+        <label class="upload" id="dropZone">
+          <input id="fileInput" type="file" accept="image/*" />
+          <span>
+            <i class="ph ph-image-square"></i>
+            <strong>Paste, drop, or choose a photo</strong>
+            <span>Square portraits work best. The final export is 1024 × 1024.</span>
+          </span>
+        </label>
+
+        <section class="group" aria-labelledby="style-title">
+          <div class="group-title" id="style-title">Style</div>
+          <div class="segmented" role="group" aria-label="Mosaic style">
+            <button type="button" data-style="calm" aria-pressed="false">Calm</button>
+            <button type="button" data-style="vivid" aria-pressed="false">Vivid</button>
+            <button type="button" data-style="freaky" aria-pressed="true">Freaky</button>
+            <button type="button" data-style="ink" aria-pressed="false">Ink</button>
+          </div>
+        </section>
+
+        <section class="group" aria-labelledby="controls-title">
+          <div class="group-title" id="controls-title">Controls</div>
+          <div class="control">
+            <label for="tileSize">Facet size <output id="tileSizeValue">12 px</output></label>
+            <input id="tileSize" type="range" min="6" max="26" value="12" step="1" />
+          </div>
+          <div class="control">
+            <label for="brandMix">Brand color <output id="brandMixValue">86%</output></label>
+            <input id="brandMix" type="range" min="25" max="98" value="86" step="1" />
+          </div>
+          <div class="control">
+            <label for="seamStrength">Tile seam <output id="seamStrengthValue">22%</output></label>
+            <input id="seamStrength" type="range" min="0" max="70" value="22" step="1" />
+          </div>
+        </section>
+
+        <section class="group" aria-labelledby="palette-title">
+          <div class="group-title" id="palette-title">Palette</div>
+          <div class="palette" aria-hidden="true">
+            <span class="swatch" style="background:#2075bc"></span>
+            <span class="swatch" style="background:#ec2227"></span>
+            <span class="swatch" style="background:#8ec640"></span>
+            <span class="swatch" style="background:#f8951d"></span>
+            <span class="swatch" style="background:#5a5daa"></span>
+            <span class="swatch" style="background:#7086ad"></span>
+            <span class="swatch" style="background:#3b4672"></span>
+            <span class="swatch" style="background:#7aa496"></span>
+            <span class="swatch" style="background:#8b8cc9"></span>
+            <span class="swatch" style="background:#85b7eb"></span>
+            <span class="swatch" style="background:#5dcaa5"></span>
+            <span class="swatch" style="background:#ef9f27"></span>
+          </div>
+          <div class="hint">The portrait drives the color placement, but neutral areas are pushed into colorful Mosaic tints so the result stays vivid.</div>
+        </section>
+      </aside>
+
+      <section class="stage" aria-label="Generated profile photo">
+        <div class="preview-wrap">
+          <div class="preview-shell">
+            <canvas id="canvas" width="1024" height="1024"></canvas>
+            <div class="empty" id="emptyState">
+              <div class="empty-card">
+                <i class="ph ph-squares-four"></i>
+                <h2>Ready when your photo is.</h2>
+                <p>Paste an image anywhere on the page and the mosaic will render here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="status">
+          <span id="statusText"><strong>No photo loaded</strong></span>
+          <span>1024 × 1024 PNG</span>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const fileInput = document.querySelector("#fileInput");
+    const dropZone = document.querySelector("#dropZone");
+    const emptyState = document.querySelector("#emptyState");
+    const statusText = document.querySelector("#statusText");
+    const downloadBtn = document.querySelector("#downloadBtn");
+    const copyBtn = document.querySelector("#copyBtn");
+    const tileSize = document.querySelector("#tileSize");
+    const brandMix = document.querySelector("#brandMix");
+    const seamStrength = document.querySelector("#seamStrength");
+    const tileSizeValue = document.querySelector("#tileSizeValue");
+    const brandMixValue = document.querySelector("#brandMixValue");
+    const seamStrengthValue = document.querySelector("#seamStrengthValue");
+    const toast = document.querySelector("#toast");
+    const styleButtons = Array.from(document.querySelectorAll("[data-style]"));
+
+    const size = 1024;
+    let sourceImage = null;
+    let activeStyle = "freaky";
+    let toastTimer = 0;
+
+    const palettes = {
+      calm: ["#2075bc", "#3b4672", "#7086ad", "#7aa496", "#d8e4ed", "#f9f8f6", "#5a5a5e"],
+      vivid: ["#2075bc", "#ec2227", "#8ec640", "#f8951d", "#5a5daa", "#7086ad", "#3b4672", "#7aa496", "#8b8cc9", "#85b7eb", "#5dcaa5", "#ef9f27", "#eb6e6e", "#1f1f1f"],
+      freaky: ["#2075bc", "#ec2227", "#8ec640", "#f8951d", "#5a5daa", "#7086ad", "#3b4672", "#ac1f25", "#791222", "#a45e18", "#7aa496", "#717174", "#8b8cc9", "#85b7eb", "#5dcaa5", "#ef9f27", "#eb6e6e", "#c3d7e8", "#f6c3c2", "#deecc9", "#f9dfc0", "#d1d1e3", "#1f1f1f", "#5a5a5e"],
+      ink: ["#1f1f1f", "#3b4672", "#2075bc", "#717174", "#8e8e92", "#c3d7e8", "#f9f8f6"]
+    };
+
+    const styleSettings = {
+      calm: { detail: 0.14, brandScale: 0.68, accentAmount: 0.01, triangle: false, ring: ["#2075bc", "#7aa496"] },
+      vivid: { detail: 0.12, brandScale: 0.94, accentAmount: 0.02, triangle: true, ring: ["#2075bc", "#f8951d", "#8ec640"] },
+      freaky: { detail: 0.14, brandScale: 1.08, accentAmount: 0.034, triangle: true, ring: ["#f8951d", "#2075bc", "#8ec640", "#5a5daa", "#ec2227"] },
+      ink: { detail: 0.32, brandScale: 0.52, accentAmount: 0.006, triangle: true, ring: ["#3b4672", "#2075bc"] }
+    };
+
+    const hexToRgb = (hex) => {
+      const raw = hex.replace("#", "");
+      return {
+        r: parseInt(raw.slice(0, 2), 16),
+        g: parseInt(raw.slice(2, 4), 16),
+        b: parseInt(raw.slice(4, 6), 16)
+      };
+    };
+
+    const paletteRgb = Object.fromEntries(
+      Object.entries(palettes).map(([key, colors]) => [key, colors.map(hexToRgb)])
+    );
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
+    }
+
+    function nearestColor(color, colors) {
+      let closest = colors[0];
+      let closestDistance = Infinity;
+
+      for (const candidate of colors) {
+        const dr = color.r - candidate.r;
+        const dg = color.g - candidate.g;
+        const db = color.b - candidate.b;
+        const distance = dr * dr * 0.28 + dg * dg * 0.48 + db * db * 0.24;
+        if (distance < closestDistance) {
+          closest = candidate;
+          closestDistance = distance;
+        }
+      }
+
+      return closest;
+    }
+
+    function chroma(color) {
+      return Math.max(color.r, color.g, color.b) - Math.min(color.r, color.g, color.b);
+    }
+
+    function colorfulNeutral(color) {
+      const light = luminance(color);
+      if (light < 46) return hexToRgb("#3b4672");
+      if (light < 86) return hexToRgb("#5a5daa");
+      if (light < 126) return hexToRgb("#2075bc");
+      if (light < 166) return hexToRgb("#5dcaa5");
+      if (light < 206) return hexToRgb("#85b7eb");
+      return hexToRgb("#ef9f27");
+    }
+
+    function translatedBrandColor(color, colors) {
+      const light = luminance(color);
+      const colorfulness = chroma(color);
+
+      if (colorfulness < 42) return colorfulNeutral(color);
+      if (light < 42) return hexToRgb("#3b4672");
+      if (light > 232 && colorfulness < 56) return hexToRgb("#f9dfc0");
+
+      return nearestColor(color, colors.filter((candidate) => candidate.r + candidate.g + candidate.b > 90));
+    }
+
+    function luminance(color) {
+      return color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722;
+    }
+
+    function preserveLuminance(color, target) {
+      const current = Math.max(1, luminance(color));
+      const scale = luminance(target) / current;
+      return {
+        r: Math.max(0, Math.min(255, Math.round(color.r * scale))),
+        g: Math.max(0, Math.min(255, Math.round(color.g * scale))),
+        b: Math.max(0, Math.min(255, Math.round(color.b * scale)))
+      };
+    }
+
+    function averageTileColor(pixels, x, y, tile) {
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      let count = 0;
+      const step = Math.max(1, Math.floor(tile / 3));
+      const maxX = Math.min(size - 1, x + tile);
+      const maxY = Math.min(size - 1, y + tile);
+
+      for (let sy = y; sy < maxY; sy += step) {
+        for (let sx = x; sx < maxX; sx += step) {
+          const index = (sy * size + sx) * 4;
+          r += pixels[index];
+          g += pixels[index + 1];
+          b += pixels[index + 2];
+          count += 1;
+        }
+      }
+
+      return {
+        r: Math.round(r / count),
+        g: Math.round(g / count),
+        b: Math.round(b / count)
+      };
+    }
+
+    function samplePixel(pixels, point) {
+      const sx = Math.max(0, Math.min(size - 1, Math.round(point.x)));
+      const sy = Math.max(0, Math.min(size - 1, Math.round(point.y)));
+      const index = (sy * size + sx) * 4;
+      return {
+        r: pixels[index],
+        g: pixels[index + 1],
+        b: pixels[index + 2]
+      };
+    }
+
+    function averageTriangleColor(pixels, points) {
+      const centroid = {
+        x: (points[0].x + points[1].x + points[2].x) / 3,
+        y: (points[0].y + points[1].y + points[2].y) / 3
+      };
+      const samples = [
+        centroid,
+        { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 },
+        { x: (points[1].x + points[2].x) / 2, y: (points[1].y + points[2].y) / 2 },
+        { x: (points[2].x + points[0].x) / 2, y: (points[2].y + points[0].y) / 2 }
+      ].map((point) => samplePixel(pixels, point));
+
+      return {
+        r: Math.round(samples.reduce((sum, color) => sum + color.r, 0) / samples.length),
+        g: Math.round(samples.reduce((sum, color) => sum + color.g, 0) / samples.length),
+        b: Math.round(samples.reduce((sum, color) => sum + color.b, 0) / samples.length)
+      };
+    }
+
+    function drawFacet(points, color) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      ctx.lineTo(points[1].x, points[1].y);
+      ctx.lineTo(points[2].x, points[2].y);
+      ctx.closePath();
+      ctx.fillStyle = rgb(color);
+      ctx.fill();
+    }
+
+    function drawFacetSeam(points, seam, color) {
+      if (seam <= 0) return;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      ctx.lineTo(points[1].x, points[1].y);
+      ctx.lineTo(points[2].x, points[2].y);
+      ctx.closePath();
+      ctx.strokeStyle = rgb(color, 0.1 + seam * 0.24);
+      ctx.lineWidth = Math.max(0.7, seam * 1.8);
+      ctx.stroke();
+    }
+
+    function brandFacetColor(photoColor, colors, x, y, tile, settings, brandAmount, accent) {
+      const mapped = translatedBrandColor(photoColor, colors);
+      const vividMapped = mix(mapped, preserveLuminance(mapped, photoColor), 0.42);
+      const brandColor = mix(photoColor, vividMapped, brandAmount);
+      const diagonal = ((Math.floor(x / tile) + Math.floor(y / tile)) % 2) * settings.accentAmount;
+      return mix(brandColor, preserveLuminance(accent, photoColor), diagonal);
+    }
+
+    function mix(a, b, amount) {
+      return {
+        r: Math.round(a.r * (1 - amount) + b.r * amount),
+        g: Math.round(a.g * (1 - amount) + b.g * amount),
+        b: Math.round(a.b * (1 - amount) + b.b * amount)
+      };
+    }
+
+    function rgb(color, alpha = 1) {
+      return `rgb(${color.r} ${color.g} ${color.b} / ${alpha})`;
+    }
+
+    function imageCrop(image) {
+      const side = Math.min(image.naturalWidth, image.naturalHeight);
+      return {
+        sx: Math.round((image.naturalWidth - side) / 2),
+        sy: Math.round((image.naturalHeight - side) / 2),
+        side
+      };
+    }
+
+    function drawMosaic() {
+      ctx.clearRect(0, 0, size, size);
+      ctx.save();
+      ctx.fillStyle = "#f9f8f6";
+      ctx.fillRect(0, 0, size, size);
+
+      if (!sourceImage) {
+        ctx.restore();
+        return;
+      }
+
+      const crop = imageCrop(sourceImage);
+      const tile = Number(tileSize.value);
+      const settings = styleSettings[activeStyle];
+      const brandAmount = Math.min(0.98, (Number(brandMix.value) / 100) * settings.brandScale);
+      const seam = Number(seamStrength.value) / 100;
+      const sampleCanvas = document.createElement("canvas");
+      sampleCanvas.width = size;
+      sampleCanvas.height = size;
+      const sampleCtx = sampleCanvas.getContext("2d", { willReadFrequently: true });
+      sampleCtx.drawImage(sourceImage, crop.sx, crop.sy, crop.side, crop.side, 0, 0, size, size);
+      const pixels = sampleCtx.getImageData(0, 0, size, size).data;
+      const colors = paletteRgb[activeStyle];
+      const center = size / 2;
+      const radius = size * 0.47;
+      const accent = hexToRgb(activeStyle === "freaky" ? "#f8951d" : "#2075bc");
+      const seamColor = hexToRgb("#f9f8f6");
+
+      ctx.beginPath();
+      ctx.arc(center, center, radius, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, size, size);
+
+      for (let y = 0; y < size; y += tile) {
+        for (let x = 0; x < size; x += tile) {
+          const px = Math.min(size - 1, x + Math.floor(tile / 2));
+          const py = Math.min(size - 1, y + Math.floor(tile / 2));
+          const dx = px - center;
+          const dy = py - center;
+          if (Math.sqrt(dx * dx + dy * dy) > radius + tile) continue;
+
+          if (settings.triangle) {
+            const flip = (Math.floor(x / tile) + Math.floor(y / tile)) % 2 === 0;
+            const triangles = flip
+              ? [
+                  [{ x, y }, { x: x + tile, y }, { x, y: y + tile }],
+                  [{ x: x + tile, y }, { x: x + tile, y: y + tile }, { x, y: y + tile }]
+                ]
+              : [
+                  [{ x, y }, { x: x + tile, y }, { x: x + tile, y: y + tile }],
+                  [{ x, y }, { x: x + tile, y: y + tile }, { x, y: y + tile }]
+                ];
+
+            triangles.forEach((points, index) => {
+              const photoColor = averageTriangleColor(pixels, points);
+              const finalColor = brandFacetColor(photoColor, colors, x + index * tile * 0.5, y, tile, settings, brandAmount, accent);
+              drawFacet(points, finalColor);
+              drawFacetSeam(points, seam, seamColor);
+            });
+          } else {
+            const photoColor = averageTileColor(pixels, x, y, tile);
+            const finalColor = brandFacetColor(photoColor, colors, x, y, tile, settings, brandAmount, accent);
+            const edge = Math.max(1, Math.round(tile * 0.1 * seam));
+
+            ctx.fillStyle = rgb(finalColor);
+            ctx.fillRect(x, y, tile + 0.5, tile + 0.5);
+
+            if (seam > 0) {
+              ctx.fillStyle = rgb(seamColor, 0.18 + seam * 0.34);
+              ctx.fillRect(x, y, tile, edge);
+              ctx.fillRect(x, y, edge, tile);
+            }
+          }
+        }
+      }
+
+      ctx.save();
+      ctx.globalAlpha = settings.detail;
+      ctx.globalCompositeOperation = "overlay";
+      ctx.drawImage(sampleCanvas, 0, 0);
+      ctx.restore();
+
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(center, center, radius + 10, 0, Math.PI * 2);
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 20;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(center, center, radius + 19, 0, Math.PI * 2);
+      ctx.strokeStyle = "#2075bc";
+      ctx.lineWidth = 5;
+      ctx.stroke();
+      settings.ring.forEach((color, index) => {
+        const start = Math.PI * (0.08 + index * 0.44);
+        ctx.beginPath();
+        ctx.arc(center, center, radius + 28, start, start + Math.PI * 0.26);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = activeStyle === "freaky" ? 10 : 8;
+        ctx.lineCap = "round";
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+
+    function setLoadedState(fileName) {
+      emptyState.hidden = true;
+      downloadBtn.disabled = false;
+      copyBtn.disabled = !navigator.clipboard || !window.ClipboardItem;
+      statusText.innerHTML = `<strong>${fileName || "Photo loaded"}</strong> rendered as Mosaic tiles`;
+    }
+
+    function loadFile(file) {
+      if (!file || !file.type.startsWith("image/")) {
+        showToast("Choose an image file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+          sourceImage = image;
+          setLoadedState(file.name);
+          drawMosaic();
+          showToast("Mosaic generated.");
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateOutputs() {
+      tileSizeValue.textContent = `${tileSize.value} px`;
+      brandMixValue.textContent = `${brandMix.value}%`;
+      seamStrengthValue.textContent = `${seamStrength.value}%`;
+    }
+
+    fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
+
+    for (const name of ["dragenter", "dragover"]) {
+      dropZone.addEventListener(name, (event) => {
+        event.preventDefault();
+        dropZone.classList.add("is-dragover");
+      });
+    }
+
+    for (const name of ["dragleave", "drop"]) {
+      dropZone.addEventListener(name, () => dropZone.classList.remove("is-dragover"));
+    }
+
+    dropZone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      loadFile(event.dataTransfer.files[0]);
+    });
+
+    window.addEventListener("paste", (event) => {
+      const file = Array.from(event.clipboardData?.files || []).find((item) => item.type.startsWith("image/"));
+      if (file) loadFile(file);
+    });
+
+    for (const input of [tileSize, brandMix, seamStrength]) {
+      input.addEventListener("input", () => {
+        updateOutputs();
+        drawMosaic();
+      });
+    }
+
+    styleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeStyle = button.dataset.style;
+        styleButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+        drawMosaic();
+      });
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "mosaic-profile-photo.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+        showToast("PNG copied.");
+      } catch {
+        showToast("Copy is not available in this browser.");
+      }
+    });
+
+    updateOutputs();
+    drawMosaic();
+  </script>
+</body>
+</html>
