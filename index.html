@@ -97,25 +97,11 @@
     }
 
     .mark {
-      position: relative;
-      width: 34px;
-      height: 34px;
+      width: 42px;
+      height: 42px;
       flex: 0 0 auto;
-      color: var(--mosaic-blue);
+      object-fit: contain;
     }
-
-    .mark span {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      background: currentColor;
-    }
-
-    .mark span:nth-child(1) { left: 2px; top: 2px; background: var(--mosaic-blue); }
-    .mark span:nth-child(2) { right: 2px; top: 2px; background: var(--mosaic-orange); }
-    .mark span:nth-child(3) { left: 2px; bottom: 2px; background: var(--mosaic-green); }
-    .mark span:nth-child(4) { right: 2px; bottom: 2px; background: var(--mosaic-purple); }
 
     .brand h1 {
       margin: 0;
@@ -509,7 +495,7 @@
   <div class="app">
     <header>
       <div class="brand">
-        <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <img class="mark" src="mosaic-logo.png" alt="Mosaic" />
         <div>
           <h1>Mosaic profile photo generator</h1>
           <p>Turn a profile image into a composed brand mosaic.</p>
